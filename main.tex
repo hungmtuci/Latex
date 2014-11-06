@@ -1,0 +1,257 @@
+\documentclass[a4paper, 12pt]{article}
+
+\setlength{\topmargin}{0in} \setlength{\oddsidemargin}{0in} \setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.25in} \setlength{\parindent}{0cm} \setlength{\textheight}{9in}
+\setlength{\parskip}{1ex} \setlength{\baselineskip}{16pt} \setlength{\topsep}{1ex}
+%\usepackage{setspace}
+%\doublespacing
+\usepackage{enumerate}
+\usepackage{amsfonts}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{subcaption} % To use subfigure
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{verbatim}
+\usepackage{longtable}
+\usepackage{multicol} % To use multicolumns 
+\setlength{\columnsep}{1cm} % Set the columns seperation
+%\usepackage{subfig}
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+\usepackage{caption}
+\makeatletter
+\renewcommand\@biblabel[1]{#1.}
+\makeatother
+\title{survival analysis 2}
+
+\newcommand*{\titlePG}{\begingroup % Create the command for including the title page in the document
+\centering % Center all text
+\vspace*{\baselineskip} % White space at the top of the page
+
+\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} % Thick horizontal line
+\rule{\textwidth}{0.4pt}\\[\baselineskip] % Thin horizontal line
+
+
+{\LARGE SURVIVAL ANALYSIS }\\[0.2\baselineskip]% Title
+
+\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} % Thin horizontal line
+\rule{\textwidth}{1.6pt}\\[\baselineskip] % Thick horizontal line
+
+\scshape % Small caps
+{ASSIGNMENT II} \\[\baselineskip] % Tagline(s) or further description
+\par 
+
+\vspace*{2\baselineskip} % Whitespace between location/year and editors
+
+\includegraphics[scale=.5]{logoI-BIOSTAT-2.png}
+
+Submitted by: \\[\baselineskip]
+{Leroy Ovbude (1334951) \\ Hung Le Xuan (1132108)  \\ Tran Trung Dung (1335881)\\ Tran Mai Phuong Thao (1335816)\\\par} % Editor list
+
+\vspace*{2\baselineskip}
+
+Supervised by: \\[\baselineskip]
+{Prof. Ingrid Van Keilegom \par} 
+
+
+\vspace*{2\baselineskip}
+
+{\itshape Universiteit Hasselt \\ Hasselt\par} % Editor affiliation
+
+\vfill % Whitespace between editor names and publisher logo
+
+%\plogo \\[0.3\baselineskip] % Publisher logo
+{\scshape 2014} \\[0.3\baselineskip] % Year published
+
+\endgroup}
+
+\begin{document} 
+\clearpage
+\titlePG% This command includes the title page
+\thispagestyle{empty}
+\clearpage
+\doublespacing
+%\clearpage
+
+Data were collected from 154 burn patients who received one of two treatments: routine bathing  and whose body cleansing using 4\% chlorhexidine gluconate. The total burn areas of patients were categorized into 3 levels: 0\%-29\%, 30\%-50\% and larger than 51\%.\\
+
+\section*{Question 1}
+We are interested in the time until \textit{staphylococcus} infection in patients received these two treatment methods. The hypothesis testing is that:\\
+$H_0:$ There is no difference between patients treated with routine bathing compared with those  whose bodies are cleaned using 4\% chlorhexidine gluconate in terms of the distribution of times until \textit{staphylococcus} infection.\\
+$H_a:$ There is indeed difference between these two groups.
+
+Assume that the Cox proportional hazard model fits data wel. The hazard function at time t of patient $i$ was expressed as: \\
+ \begin{equation}
+       h_i(t) = h_0(t)exp(\beta^T\textbf{x}_i) 
+ \end{equation}
+Where $h_o(t)$ is the baseline hazard function \\
+$\textbf{x}_i$ is $1x1$ vector containing covariate information for subject i (in this model, we only consider one covariate which is the treatment group of patients, $x_i =1$ if patients received body cleaning treatment, $x_i = 0$ otherwise)\\
+%$\beta$ is $1x1$ parameter vector \\
+
+Software R.3.0.2 is used. A global test was applied using Breslow approximation and Efron approximation (to approximate the partial likelihood for data with tied observations). Likelihood Ratio and Wald test statistic are used. The result is shown in Table~\ref{tab:q1}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Test statistic and p\_value}
+    \begin{tabular}{rrr}
+    \hline
+    \hline
+          & Likelihood Ratio Test & Wald Test \\
+    \hline
+    Breslow approximation & 3.71 (p\_value = 0.0541) & 3.64 (p\_value = 0.0563) \\
+    Efron approximation & 3.71 (p\_value = 0.0541) & 3.64 (p\_value = 0.0563) \\
+    \hline
+    \hline
+    \end{tabular}%
+  \label{tab:q1}%
+\end{table}%
+
+In both cases (Breslow approximation and Efron approximation), the p\_values for Likelihood Ratio test and Wald test are larger than 0.05. We do not reject the null hypothesis.
+This result is in agreement with those we obtained from exercise 2 of homework 1 where it is concluded that there is no difference in terms of time to be infected by \textit{staphylococcus} in two treatment groups. 
+
+
+
+
+\section*{Question 2}
+
+$H_0:$ There is no difference between two treatments adjusting for the total area burned.
+
+$H_a:$ There is indeed difference between these two groups.
+
+Assume that the Cox proportional hazard model fits data well. The hazard function at time $t$ for patient $i$ was expressed as:
+\begin{center}
+$h_i(t) = h_0(t)\mbox{exp}(\beta_1 Treatment_i+\beta_2 Percent_i+\beta_3 Treatment*Percent_i)$
+\end{center}
+where for patient $i$, $Treatment_i$ is assigned 1 if this patient receives body cleansing treatment, and 0 otherwise; $Percent_i$ is the percentage of total surface area burned; and $Treatment*Percent_i$ is the interaction term between Treatment and Percent.
+
+Using SAS 9.4, Wald chi-square statistic for testing significance of interaction term (or testing $\beta_3=0$) is 0.0579 which gives p-value of 0.8099 (insignificant). So we now consider model, in which
+\begin{center}
+$h_i(t) = h_0(t)exp(\beta_1 Treatment_i+\beta_2 Percent_i)$
+\end{center}
+To test the hypothesis, we need to test $\beta_1=0$. The Wald statistic is: 3.1293 with p-value=0.0769. For likelihood ratio test, we have -2 times of log likelihood for full model is: 437.784, and for reduced model (when $\beta_1=0$) is: 434.600. Then the likelihood ratio test is 437.784-434.600=3.184 which gives p-value 0.0744.
+
+
+
+
+Therefore both Wald and likelihood ratio tests do not reject the null hypothesis. Controlling for the total area burned, with 95\% confidence level, it is conclusive that there is no difference between the two treatments. This conclusion is in agreement with one in Question 1.
+
+\section*{Question 3}
+Hazard function was defined in the $2^{nd}$ question\\
+\centerline{$h_i(t) = h_0(t)exp(\beta_1 Treatment_i+\beta_2 Percent_i)$} \\
+\\
+Breslow estimator with tied observations for baseline hazard\\
+\centerline{$\hat{h}_{0(j)} = \frac{d_{(j)}}{\displaystyle \sum_{k:R(y_{(j)})}exp(\beta_1 Treatment_i+\beta_2 Percent_i)}$}\\
+\\
+Base line cumulative hazard\\
+\centerline{$\hat{H}_0(t)=\displaystyle \sum_{j:y(j)\leq t}\hat{h}_{0(j)}$}\\
+\\
+Survival function for each subject
+\begin{tabbing}
+\hspace*{3cm} $\hat{S}_i(t)$ \=$=exp(\displaystyle -\int_{0}^{\infty}\hat{h}_i(t)dt)$\\
+\>$=exp(exp(\beta_1 Treatment_i+\beta_2 Percent_i)-\hat{H}_0(t))$\\
+\>$=(\hat{S}_0(t))^{exp(\beta_1 Treatment_i+\beta_2 Percent_i)}$ ,with  $\hat{S}_0(t)=exp(\hat{H}_0(t))$\\
+
+\centerline{$\hat{S}_i(t)=\hat{S}_0(t))^{exp(-0.524764*Treatment_i+0.007248* Percent_i)}$}
+\end{tabbing}
+\begin{table}[!htbp]
+\centering
+\caption{Estimates of the survival functions for \textbf{Routine bathing} solutions for an individual who has 25\% of the total body area burned:} 
+\begin{tabular}{ccccccc}
+\hline \hline
+time&n.risk&n.event&survival&std.err&lower 95\% CI&upper 95\% CI\\
+\hline
+1&154&1&0.992&0.00823&0.976&1\\
+2&153&3&0.967&0.01658&0.935&1\\
+3&150&4&0.935&0.02362&0.89&0.982\\
+4&146&5&0.894&0.03045&0.837&0.956\\
+5&141&6&0.846&0.03708&0.776&0.922\\
+6&134&2&0.83&0.03905&0.757&0.91\\
+7&132&3&0.806&0.04187&0.728&0.892\\
+8&126&2&0.79&0.04376&0.708&0.88\\
+9&121&2&0.773&0.04566&0.688&0.868\\
+10&117&2&0.756&0.04757&0.668&0.855\\
+11&112&3&0.729&0.05044&0.637&0.835\\
+13&102&1&0.72&0.05145&0.626&0.828\\
+14&96&1&0.711&0.05247&0.615&0.821\\
+16&88&1&0.7&0.05353&0.603&0.813\\
+17&82&2&0.678&0.05576&0.577&0.797\\
+18&76&2&0.656&0.05777&0.552&0.779\\
+19&70&1&0.644&0.05878&0.539&0.77\\
+21&65&1&0.632&0.05989&0.525&0.761\\
+23&55&1&0.618&0.0612&0.509&0.75\\
+32&35&1&0.597&0.06403&0.484&0.737\\
+42&19&1&0.563&0.07157&0.438&0.722\\
+44&15&1&0.523&0.07975&0.388&0.705\\
+47&12&1&0.477&0.08852&0.332&0.686\\
+51&9&1&0.421&0.09906&0.266&0.668\\
+\hline \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Estimates of the survival functions for \textbf{Body cleaning} solutions for an individual who has 25\% of the total body area burned} 
+\begin{tabular}{ccccccc}
+\hline \hline
+time&n.risk&n.event&survival&std.err&lower 95\% CI&upper 95\% CI\\
+\hline
+1&154&1&0.995&0.00492&0.986&1\\
+2&153&3&0.981&0.01021&0.961&1\\
+3&150&4&0.961&0.0151&0.932&0.991\\
+4&146&5&0.936&0.02025&0.897&0.977\\
+5&141&6&0.906&0.02575&0.857&0.958\\
+6&134&2&0.896&0.02749&0.843&0.951\\
+7&132&3&0.88&0.03002&0.823&0.941\\
+8&126&2&0.87&0.0317&0.81&0.934\\
+9&121&2&0.859&0.03339&0.796&0.927\\
+10&117&2&0.847&0.03508&0.781&0.919\\
+11&112&3&0.83&0.0376&0.759&0.907\\
+13&102&1&0.823&0.03851&0.751&0.903\\
+14&96&1&0.817&0.03948&0.743&0.898\\
+16&88&1&0.81&0.04058&0.734&0.893\\
+17&82&2&0.795&0.04293&0.715&0.884\\
+18&76&2&0.779&0.0454&0.695&0.873\\
+19&70&1&0.771&0.04671&0.685&0.868\\
+21&65&1&0.762&0.0481&0.673&0.863\\
+23&55&1&0.752&0.04981&0.661&0.856\\
+32&35&1&0.737&0.053&0.64&0.849\\
+42&19&1&0.712&0.06038&0.603&0.84\\
+44&15&1&0.681&0.06886&0.559&0.83\\
+47&12&1&0.645&0.07832&0.509&0.819\\
+51&9&1&0.6&0.0902&0.446&0.805\\		
+\hline \hline
+\end{tabular}
+\end{table}
+\pagebreak
+
+\section*{Question 4}
+From question 3 above, we can obtain the 95 \% confidence interval for the survival functions for the two bathing solutions
+at 20 days for a patient with 25\% of total surface area of body burned. These intervals were obtained by using the log transformation. They are given below:\\
+95\% CI for Survival of Patient with 25\% burns and regular bathing: (0.52746, 0.76271 ).
+95\% CI for survival of patient with 25\% burns and body-cleansing: (0.67524, 0.86338 ). 
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
